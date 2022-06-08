@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "165177338800",
+    "project_id": "rila-studios",
+    "storage_bucket": "rila-studios.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:165177338800:android:ef83d3caf5d7197e79c475",
+        "android_client_info": {
+          "package_name": "rila.studio.rila"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "165177338800-mh4snj30til8ldvm8rks1t4fog0slk0q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZN2g5YyCy--heLFqWIrruIvgtqr2Ellg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "165177338800-mh4snj30til8ldvm8rks1t4fog0slk0q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "165177338800-nf1iqfk815stam5fipgegcn0vnj7oak6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "rila.studio.rila"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
