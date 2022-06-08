@@ -31,6 +31,11 @@ dependencies:
     sdk: flutter
   flutter_paystack: ^1.0.5+1
   intl:
+  firebase_core: ^1.13.1
+  firebase_auth: ^3.3.11
+  cloud_firestore: ^3.1.10
+  blurry_modal_progress_hud: ^1.0.3
+
 
 
 
@@ -50,6 +55,10 @@ flutter_native_splash:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  fluttertoast: ^8.0.9
+
+  toggle_switch: ^2.0.1
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

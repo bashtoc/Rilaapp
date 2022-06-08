@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rila/screens/cards.dart';
 import '../screens/profile.dart';
 import '../screens/home.dart';
 import '../screens/dashboard.dart';
@@ -7,22 +6,21 @@ import '../screens/dashboard.dart';
 
 class BottomNavBar extends StatefulWidget {
    static const String id = 'bottomNavBar';
-  BottomNavBar({Key? key}) : super(key: key);
+  BottomNavBar({Key? key,}) : super(key: key);
 
   @override
   _BottomNavBarState createState() => _BottomNavBarState();
 
   final List<Widget> screens = [
-     const Home(),
-    const DashBoard(),
-         Cards(),
-          Profile(),
+     const Home(firstName: '',),
+     const DashBoard(),
+          const Profile(),
   ];
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen =  const Home();
+  Widget currentScreen =  const Home(firstName: '',);
   int currentTab = 0;
 
   @override
@@ -47,7 +45,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 onPressed: () {
                   setState(
                         () {
-                      currentScreen =  const Home();
+                      currentScreen =   const Home(firstName: '',);
                       currentTab = 0;
                     },
                   );
@@ -71,6 +69,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 ),
               ),
               MaterialButton(
+
                 minWidth: 40,
                 onPressed: () {
                   setState(
@@ -96,42 +95,42 @@ class _BottomNavBarState extends State<BottomNavBar> {
                       ),
                     )
                   ],
-                ),
-              ),MaterialButton(
-                minWidth: 40,
-                onPressed: () {
-                  setState(
-                        () {
-                      currentScreen =   Cards();
-                      currentTab = 2;
-                    },
-                  );
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.branding_watermark_rounded,
-                      size: 25.0,
-                      color: currentTab == 2 ? const Color(0xffE73030) : Colors.grey,
-                    ),
-                    Text(
-                      'cards',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: currentTab == 2 ? const Color(0xffE73030) : Colors.grey,
-                      ),
-                    )
-                  ],
-                ),
-              ),
+                ),),
+               // ),MaterialButton(
+              //   minWidth: 40,
+              //   onPressed: () {
+              //     setState(
+              //           () {
+              //         currentScreen =   const Cards();
+              //         currentTab = 2;
+              //       },
+              //     );
+              //   },
+              //   child: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: <Widget>[
+              //       Icon(
+              //         Icons.branding_watermark_rounded,
+              //         size: 25.0,
+              //         color: currentTab == 2 ? const Color(0xffE73030) : Colors.grey,
+              //       ),
+              //       Text(
+              //         'cards',
+              //         style: TextStyle(
+              //           fontSize: 10,
+              //           color: currentTab == 2 ? const Color(0xffE73030) : Colors.grey,
+              //         ),
+              //       )
+              //     ],
+              //   ),
+              // ),
               MaterialButton(
                 minWidth: 40,
                 onPressed: () {
                   setState(
                         () {
                       currentScreen =  Profile();
-                      currentTab = 3;
+                      currentTab = 2;
                     },
                   );
                 },
@@ -141,13 +140,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     Icon(
                       Icons.account_circle,
                       size: 25.0,
-                      color: currentTab == 3 ? const Color(0xffE73030) : Colors.grey,
+                      color: currentTab == 2 ? const Color(0xffE73030) : Colors.grey,
                     ),
                     Text(
                       'profile',
                       style: TextStyle(
                         fontSize: 10,
-                        color: currentTab == 3 ? const Color(0xffE73030) : Colors.grey,
+                        color: currentTab == 2 ? const Color(0xffE73030) : Colors.grey,
                       ),
                     )
                   ],

@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:rila/classes/Activities_class.dart';
 import 'package:rila/classes/movie_class.dart';
+import 'package:rila/models/constants.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 
-class Activities extends StatelessWidget {
-  Activities({Key? key}) : super(key: key);
+class Activities extends StatefulWidget {
+  const Activities({Key? key}) : super(key: key);
   static String id = 'activities_Screen';
 
+  @override
+  State<Activities> createState() => _ActivitiesState();
+}
+
+List<Widget> labels = [
+  const TicketDetails(),
+  const Slots(),
+];
+
+class _ActivitiesState extends State<Activities> {
   final List<MoviesDashboard> moviesDashboard = [
     MoviesDashboard(
         movieName: 'Witches Den',
@@ -13,9 +25,6 @@ class Activities extends StatelessWidget {
         productionCost: 120000.0,
         slotPrice: 4000.0)
   ];
-
-
-
 
   final List<ActivitiesHistory> activitiesHistory = [
     ActivitiesHistory(
@@ -28,536 +37,87 @@ class Activities extends StatelessWidget {
     )
   ];
 
+  int counter = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon:  const Icon(Icons.arrow_back,
-          color: Colors.black,
-          ), onPressed: () {
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
             Navigator.pop(context);
-        },
+          },
         ),
-
         centerTitle: true,
         backgroundColor: Colors.white,
-        elevation: 1,
+        elevation: 0,
         title: const Text(
           'Activities',
           style: TextStyle(color: Colors.black),
         ),
       ),
-      backgroundColor: const Color(0xffF4F4F4),
-      body: ListView.builder(
-          itemBuilder: (BuildContext context, int index) {
-            return Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 100,
-                  color: Colors.white,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Name',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieName),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Text(
-                            'Type',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieType),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Slots',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].slots.toString()),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Due',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].due.toString()),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 05,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 100,
-                  color: Colors.white,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Name',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieName),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Text(
-                            'Type',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieType),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Slots',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].slots.toString()),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Due',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].due.toString()),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 05,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 100,
-                  color: Colors.white,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Name',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieName),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Text(
-                            'Type',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieType),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Slots',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].slots.toString()),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Due',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].due.toString()),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 05,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 100,
-                  color: Colors.white,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Name',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieName),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Text(
-                            'Type',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieType),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Slots',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].slots.toString()),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Due',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].due.toString()),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 05,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 100,
-                  color: Colors.white,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Name',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieName),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Text(
-                            'Type',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieType),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Slots',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].slots.toString()),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Due',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].due.toString()),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 05,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 100,
-                  color: Colors.white,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Name',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieName),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Text(
-                            'Type',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieType),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Slots',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].slots.toString()),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Due',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].due.toString()),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 05,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  height: 100,
-                  color: Colors.white,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Name',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieName),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          const Text(
-                            'Type',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(moviesDashboard[index].movieType),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Slots',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].slots.toString()),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Due',
-                            style: TextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Text(activitiesHistory[index].due.toString()),
-                        ],
-                      )
-                    ],
-                  ),
-                )
-              ],
-            );
-          },
-          itemCount: activitiesHistory.length),
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ToggleSwitch(
+                  minWidth: 100.0,
+                  minHeight: 30.0,
+                  fontSize: 16.0,
+                  initialLabelIndex: 0,
+                  activeBgColor: const [buttonColor],
+                  activeFgColor: Colors.white,
+                  inactiveBgColor: Colors.grey,
+                  inactiveFgColor: Colors.grey[900],
+                  totalSwitches: 2,
+                  labels: const [
+                    'Slots',
+                    'Tickets',
+                  ],
+                  onToggle: (index) {
+                    setState(() {
+                      counter = index!;
+                    });
+                  }),
+            ],
+          ),
+          Column(
+            children: [
+              labels[counter],
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class TicketDetails extends StatelessWidget {
+  const TicketDetails({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: const Center(
+        child: Text(' hey, you just bought a ticket'),
+      ),
+    );
+  }
+}
+
+class Slots extends StatelessWidget {
+  const Slots({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('you bought  a slot, woww'),
     );
   }
 }

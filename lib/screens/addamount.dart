@@ -1,11 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
-import 'package:rila/classes/paystackkey.dart';
 import 'package:rila/screens/paystackgateway.dart';
-
-
 
 class AddAmount extends StatefulWidget {
   const AddAmount({Key? key}) : super(key: key);
@@ -80,21 +74,25 @@ class _AddAmountState extends State<AddAmount> {
                   primary: Colors.blue,
                 ),
                 onPressed: () {
-
-
-
                   if (_formKey.currentState!.validate()) {
-                    try {
-                      MakePayment(
-                        ctx: context,
-                        price: depositAmount,
-                      ).chargeCardAndMakePayment();
-
-                      // something happens when its pressed
-                    } catch (e) {
-                      print(e);
-                    }
+                    MakePayment(
+                      ctx: context,
+                      price: depositAmount, id: '',
+                    ).chargeCardAndMakePayment();
                   }
+
+                  //   // something happens when its pressed
+
+                  // try {
+                  //   MakePayment(
+                  //     ctx: context,
+                  //     price: depositAmount,
+                  //   ).chargeCardAndMakePayment();
+                  //
+                  //   // something happens when its pressed
+                  // } catch (e) {
+                  //   print(e);
+                  // }
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -116,6 +114,3 @@ class _AddAmountState extends State<AddAmount> {
     );
   }
 }
-
-
-

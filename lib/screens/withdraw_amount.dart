@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:rila/screens/paystackgateway.dart';
+
+const snackBar2 = SnackBar(content: Text('insufficient funds'));
 
 class WithDrawAmount extends StatefulWidget {
- const WithDrawAmount({Key? key}) : super(key: key);
-
+  const WithDrawAmount(
+      {Key? key, required this.lastName, required this.availableBalance, required this.firstName})
+      : super(key: key);
+  final String firstName;
+  final int availableBalance;
+  final String lastName;
   @override
   State<WithDrawAmount> createState() => _WithDrawAmountState();
 }
@@ -10,12 +17,14 @@ class WithDrawAmount extends StatefulWidget {
 class _WithDrawAmountState extends State<WithDrawAmount> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  String withDrawAmount = '';
+  int withDrawAmount = 0;
+  int accountNo = 0;
+  String bankName = '';
 
   String? validatePass(value) {
     {
       if (value!.isEmpty) {
-        return 'Invalid amount';
+        return 'field required';
       } else {
         return null;
       }
@@ -24,7 +33,7 @@ class _WithDrawAmountState extends State<WithDrawAmount> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(
@@ -43,30 +52,101 @@ class _WithDrawAmountState extends State<WithDrawAmount> {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: GestureDetector(
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
         child: Container(
-          margin: const EdgeInsets.only(left: 50, right: 50, top: 100),
-          height: 200,
+          margin: const EdgeInsets.only(left: 50, right: 50, top: 40),
           width: 400,
           child: Column(
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'balance: ',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey),
+                  ),
+                  const Text(
+                    ' NGN',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    widget.availableBalance.toString(),
+                    style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 50),
               Form(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 key: _formKey,
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    withDrawAmount = value;
-                  },
-                  decoration: const InputDecoration(
-                    hintText: 'Enter amount',
-                  ),
-                  validator: validatePass,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        withDrawAmount = int.parse(value);
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Enter amount',
+                      ),
+                      validator: validatePass,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      textAlign: TextAlign.center,
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        accountNo = int.parse(value);
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Account Number',
+                      ),
+                      validator: validatePass,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      textAlign: TextAlign.center,
+
+                      onChanged: (value) {
+                        bankName = value;
+                      },
+                      decoration: const InputDecoration(
+                        hintText: 'Bank Name',
+                      ),
+                      validator: validatePass,
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(
-                height: 40,
+                height: 20,
+              ),
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+                   Text(widget.firstName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize:18), ),
+                   const SizedBox(width: 10,),
+                   Text(widget.lastName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize:18),),
+                 ],
+               ),
+              const SizedBox(
+                height: 20,
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -76,6 +156,12 @@ class _WithDrawAmountState extends State<WithDrawAmount> {
 
                   if (_formKey.currentState!.validate()) {
                     try {
+                      if (withDrawAmount <= widget.availableBalance) {
+                        print('sucess');
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar2);
+                        ;
+                      }
 
                       // something happens when its pressed
                     } catch (e) {

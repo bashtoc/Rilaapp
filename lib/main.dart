@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:rila/models/bottomnavbar.dart';
-import 'package:rila/screens/sign_in.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:rila/screens/slot_details.dart';
+import 'package:rila/screens/splash_screen.dart';
 
 
+void main() async{
 
-void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -18,9 +21,9 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return   MaterialApp(
+    return   const MaterialApp(
       debugShowCheckedModeBanner: false,
-     home:BottomNavBar(),
+     home:Splash(),
 
     );
   }
