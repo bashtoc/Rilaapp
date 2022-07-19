@@ -1,10 +1,12 @@
 import 'package:blurry_modal_progress_hud/blurry_modal_progress_hud.dart';
-import 'package:flutter/material.dart';
-import 'package:rila/models/constants.dart';
-import 'package:rila/screens/personal_details.dart';
-import 'package:rila/screens/sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rila/models/bottomnavbar.dart';
+import 'package:rila/models/constants.dart';
+import 'package:rila/screens/sign_in.dart';
+
+import '../models/user_management.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -13,21 +15,24 @@ class SignUp extends StatefulWidget {
   @override
   State<SignUp> createState() => _SignUpState();
 }
+
 late FToast fToast;
-bool isLoading = false;
 
-
+String lastName = '';
+String firstName = '';
 
 class _SignUpState extends State<SignUp> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  late String email ='';
+  late String email = '';
 
-  late String password ='';
+  late String password = '';
 
-
+  bool isLoading = false;
+  bool checkIndex = false;
+  bool showErrorMessage = false;
   @override
   void initState() {
     super.initState();
@@ -62,18 +67,19 @@ class _SignUpState extends State<SignUp> {
         child: SingleChildScrollView(
           child: SafeArea(
             child: Container(
-              padding: const EdgeInsets.only(left: 30, right: 30),
-              child: Column(
-                children: <Widget>[
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: <Widget>[
+                padding: const EdgeInsets.only(left: 30, right: 30),
+                child: Column(
+                  children: <Widget>[
+                    Form(
+                      key: _formKey,
+                      child: Column(children: <Widget>[
                         const SizedBox(
                           height: 40,
                         ),
                         TextFormField(
-                          onChanged: (value){email = value;},
+                          onChanged: (value) {
+                            email = value;
+                          },
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
@@ -86,11 +92,64 @@ class _SignUpState extends State<SignUp> {
                               hintText: 'Enter your email', labelText: 'Email'),
                         ),
                         const SizedBox(
-                          height: 20,
+                          height: 40,
                         ),
-
+                        SizedBox(
+                          width: 350,
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 170,
+                                child: TextFormField(
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'field required';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: ktextfield.copyWith(
+                                    hintText: 'first name',
+                                    labelText: 'first name',
+                                  ),
+                                  onChanged: (value) {
+                                    firstName = value;
+                                  },
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              SizedBox(
+                                width: 150,
+                                child: TextFormField(
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'field required';
+                                    }
+                                    return null;
+                                  },
+                                  decoration: ktextfield.copyWith(
+                                    hintText: 'Last name',
+                                    labelText: 'last name',
+                                  ),
+                                  onChanged: (value) {
+                                    lastName = value;
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 40,
+                        ),
                         TextFormField(
-                          onChanged: (value){
+
+                          onChanged: (value) {
                             password = value;
                           },
                           autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -98,53 +157,41 @@ class _SignUpState extends State<SignUp> {
                             if (value == null || value.isEmpty) {
                               return 'field required';
                             }
+                            if (value.length < 6) {
+                              return 'password must be six characters and above';
+                            }
                             return null;
                           },
                           decoration: ktextfield.copyWith(
+
                             hintText: 'Select Password',
                             labelText: 'Password',
                           ),
                         ),
                         const SizedBox(
-                          height: 15,
-                        ),
-                        Column(
-                          children: const [
-                            Text('By signing up, you agree to our '),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5.0,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-
-                          },
-                          child: const Text(
-                            'Terms and conditions',
-                            style: TextStyle(color: Colors.green),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
+                          height: 35,
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               primary: buttonColor, onPrimary: buttonColor),
                           onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-
+    if (checkIndex != true) {
+    setState(() => showErrorMessage = true);}
+    else {(_formKey.currentState!.validate() );} {
                               setState(() {
                                 isLoading = true;
                               });
                               try {
                                 await _auth.createUserWithEmailAndPassword(
                                     email: email, password: password);
+                                DbHelper().addUser(lastName: lastName,firstName: firstName);
 
                                 Navigator.pushAndRemoveUntil(
                                     context,
-                                    MaterialPageRoute(builder: (_) => const PersonalDetails()),
-                                        (route) => false);
+                                    MaterialPageRoute(
+                                        builder: (_) =>
+                                             BottomNavBar()),
+                                    (route) => false);
                                 // something happens when its pressed
                               } on FirebaseAuthException catch (error) {
                                 fToast.showToast(
@@ -153,11 +200,13 @@ class _SignUpState extends State<SignUp> {
                                     color: Colors.white,
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
-                                      children:  [
+                                      children: [
                                         const Icon(Icons.face),
                                         Text(
                                           error.message.toString(),
-                                          style: const TextStyle(color: Colors.black87, fontSize: 16.0),
+                                          style: const TextStyle(
+                                              color: Colors.black87,
+                                              fontSize: 16.0),
                                         )
                                       ],
                                     ),
@@ -190,54 +239,77 @@ class _SignUpState extends State<SignUp> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        showErrorMessage
+                            ? Container(
+                                decoration: BoxDecoration(
+                                    // color: Colors.red,
+                                    borderRadius: BorderRadius.circular(80.0)),
+                                child: const Padding(
+                                    padding: EdgeInsets.all(10.0),
+                                    child: Text(
+                                      'Accept the terms and conditions to proceed..',
+                                      style: TextStyle(color: Colors.red),
+                                    )))
+                            : Container(),
+
+                        Column(
                           children: [
-                            const Text('Have an account?'),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(builder: (_) => const SignIn()),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Checkbox(
+                                    activeColor:Colors.green,
+                                    value: checkIndex,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        checkIndex = value!;
+                                      });
+                                      if (checkIndex == true) {
+                                        setState(
+                                            () => showErrorMessage = false);
+                                      }
+                                    }),
+                                TextButton(
+                                    onPressed: () {},
+                                    child: const Text(
+                                      'Terms and Conditions',
+                                      style: TextStyle(
+                                          color: Colors.green,
+                                          fontWeight: FontWeight.bold),
+                                    ))
+                              ],
+                            ),
+                            const SizedBox(height: 50,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text('Have an account?'),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (_) => const SignIn()),
                                         (route) => false);
 
-                                //do something when pressed.
-                              },
-                              child: const Text(
-                                'Sign in',
-                                style: TextStyle(color: Colors.green),
-                              ),
-                            ),
+                                    //do something when pressed.
+                                  },
+                                  child: const Text(
+                                    'Sign in',
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                ),
+                              ],
+                            )
                           ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+                        ),
+                      ]),
+                    )
+                  ],
+                )),
           ),
         ),
       ),
     );
   }
 }
-
-
-
-
-
-
-// TextFormField(
-// autovalidateMode: AutovalidateMode.onUserInteraction,
-// validator: (value) {
-// if (value == null || value.isEmpty) {
-// return 'field required';
-// }
-// return null;
-// },
-// decoration: ktextfield.copyWith(
-// hintText: 'Enter username ',
-// labelText: 'Name',
-// ),
-// ),

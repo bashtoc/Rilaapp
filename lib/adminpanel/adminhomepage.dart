@@ -84,7 +84,7 @@ class _AdminPanelState extends State<AdminPanel> {
             children: [
               GestureDetector(
                 onTap: (){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) =>  ListMovie()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) =>  ListMoviePage()));
 
                 },
                 child: Image.asset(

@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:rila/screens/paystackgateway.dart';
 
 import '../models/constants.dart';
-import 'dashboard.dart';
 
-String? SlotDetail;
-
+String slotDetails = 'slotDetails';
 
 class SlotDetails extends StatefulWidget {
-  SlotDetails({
+  const SlotDetails({
     Key? key,
     required this.movieName,
     required this.slotPrice,
@@ -18,11 +16,11 @@ class SlotDetails extends StatefulWidget {
     required this.dueDate,
   }) : super(key: key);
 
-  String? dueDate;
-  String? percentageInterest;
-  String? streamingPlatform;
+  final String? dueDate;
+  final double? percentageInterest;
+  final String? streamingPlatform;
   final String? movieName;
-  int slotPrice;
+  final int slotPrice;
   static const styler = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 14,
@@ -38,11 +36,18 @@ class _SlotDetailsState extends State<SlotDetails> {
   CollectionReference dbCollection =
       FirebaseFirestore.instance.collection('Movies');
 
-  int slotPrice = 0;
   String? movieName;
   @override
   Widget build(BuildContext context) {
-    slotPrice = widget.slotPrice;
+
+    // slotMaturity() {
+    //   if( true > dif)
+    // };
+
+
+
+
+    int slotPrice = widget.slotPrice;
     movieName = widget.movieName!;
     return Scaffold(
         appBar: AppBar(
@@ -138,14 +143,14 @@ class _SlotDetailsState extends State<SlotDetails> {
                   child: Row(
                     children: [
                       const Text(
-                        'Slot percentage interest:   % ',
+                        'Interest: NGN',
                         style: SlotDetails.styler,
                       ),
                       const SizedBox(
                         width: 2,
                       ),
                       Text(
-                        widget.percentageInterest.toString(),
+                        ' ${widget.percentageInterest.toString()}',
                         style: SlotDetails.styler2,
                       )
                     ],
@@ -162,45 +167,13 @@ class _SlotDetailsState extends State<SlotDetails> {
                         'SlotPrice: NGN '.toString(),
                         style: SlotDetails.styler,
                       ),
-                      Text(slotPrice.toString(), style: SlotDetails.styler2,)
-
+                      Text(
+                        slotPrice.toString(),
+                        style: SlotDetails.styler2,
+                      )
                     ],
                   ),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    height: 40,
-                    width: 40,
-                    color: buttonColor,
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.remove,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => setState(() => slotPrice--),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                   // Container(color:Colors.grey,child: Text(slotPrice.toString(), style: SlotDetails.styler,)),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Container(
-                    height: 40,
-                      width: 40,
-                      color: buttonColor,
-                      child: IconButton(
-                          icon: const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          ),
-                          onPressed: () => setState(() => slotPrice++)))
-                ],
               ),
               const SizedBox(
                 height: 50,
@@ -214,12 +187,9 @@ class _SlotDetailsState extends State<SlotDetails> {
                           padding: const EdgeInsets.only(
                               left: 100, top: 20, bottom: 20, right: 100)),
                       onPressed: () {
-                        try {
-                          MakePayment(ctx: context, price: slotPrice, id: SlotDetail)
-                              .chargeCardAndMakePayment();
-                        } catch (error) {
-                          print(error);
-                        }
+                        MakePayment(
+                                ctx: context, price: slotPrice, id: slotDetails, interest: widget.percentageInterest, dueDate: widget.dueDate, movieName: movieName, )
+                            .chargeCardAndMakePayment();
                       },
                       child: const Text('Proceed to payment')),
                 ],
@@ -227,5 +197,11 @@ class _SlotDetailsState extends State<SlotDetails> {
             ],
           ),
         ));
+
+
+
+
   }
+
+
 }

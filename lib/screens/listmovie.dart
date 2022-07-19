@@ -11,7 +11,7 @@ class ListMovie extends StatefulWidget {
 class _ListMovieState extends State<ListMovie> {
   String contactNumber = '08122213751';
 
-  String contactEmail = 'hello@rilastudio.com';
+  String contactEmail = 'info@rilastudio.co';
 
   @override
   Widget build(BuildContext context) {
@@ -47,35 +47,41 @@ class _ListMovieState extends State<ListMovie> {
               height: 10,
             ),
             const Text(
-                'Over the years, content creation has  advanced, with Nigeria taking the lead in Africa, though challenges cannot be overlooked of which funding is one of it.    ', style: textfieldstyler),
+                'Become a creator offers an opportunity to aspiring content creators to join us in creating amazing contents and telling their stories on our youtube channels', style: textfieldstyler),
             const SizedBox(
               height: 10,
             ),
-            const Text(' We understand the business of content creation so we provide a platform for you to enhance your film making and content creation level. write your story and worry less about financing it, list your movie for free, and gain the finance to produce it from slots and subscriptions. Give a percentage of your stream back to the subscribers, interesting right?',style: textfieldstyler),
+            const Text(' It could be difficult starting out as a content creator, we offer you an established platform to tell your story and earn alongside',style: textfieldstyler),
 
             const SizedBox(
               height: 10,
             ),
             const Text(
-                'If your movie costs one million in production, you would be required to remit one million and a percentage alongside, 10% and above after sales …', style: textfieldstyler),
+                'we pay you 70% of of every of your video earnings on our youtube channel ', style: textfieldstyler),
             const SizedBox(
               height: 10,
             ),
-            const Text('Requirements: Registered business name.', style: textfieldstyler),
+            const Text('your video becomes an exclusive content of rilastudios and entertainment limited.', style: textfieldstyler),
             const SizedBox(
               height: 10,
             ),
             const Text(
-                'distribution channel, (Netflix, Cinema, Youtube, Amazon prime)', style: textfieldstyler),
-            const Text(' A signed movie MOU', style: TextStyle(fontSize: 18)),
-            const Text('A banner, size( with:365, height: 118))', style: textfieldstyler),
-            const SizedBox(
-              height: 10,
-            ),
-            Text('for more Enquiries, contact: $contactNumber, $contactEmail', style: textfieldstyler)
+                'make a one time registration fee to get started', style: textfieldstyler),
 
+            Text('for more Enquiries, contact: $contactNumber, $contactEmail', style: textfieldstyler),
+          const SizedBox(height: 40,),
 
+            SizedBox(
+              width: 400,
+              child: ElevatedButton(
 
+                  style: ElevatedButton.styleFrom(
+                    primary: const Color(0xffC55E14),
+                    padding: const EdgeInsets.all(20),
+
+                  ),
+                  onPressed: (){}, child: const Text('Pay NGN 20,000 to register')),
+            )
           ],
         ),
       )),

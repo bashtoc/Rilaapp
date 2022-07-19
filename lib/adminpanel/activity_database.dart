@@ -4,27 +4,29 @@ import 'package:intl/intl.dart';
 
 class ActivityDb {
   CollectionReference activityCollection =
-  FirebaseFirestore.instance.collection('Activities');
+      FirebaseFirestore.instance.collection('Activities');
 
   User? user = FirebaseAuth.instance.currentUser;
 
-  /// add activity
+  /// add ticket activity
 
-  Future<String> addActivity(
-      {String? movieName,
-        // String? movieType,
-        int? slotPrice,
-        // String? productionCost
-      }) async {
+  Future<String> addTickets({
+    int? ticketPrice,
+    String? ticketBanner,
+
+
+  }) async {
     try {
       String formattedDate = DateFormat.yMMMd().format(DateTime.now());
       final data = {
-        'movieName': movieName,
+        'ticket price': ticketPrice,
         'date': formattedDate,
-        'slotPrice': slotPrice,
       };
 
-      await activityCollection.doc(user!.uid).collection('userActivities').add(data);
+      await activityCollection
+          .doc(user!.uid)
+          .collection('TicketActivities')
+          .add(data);
 
       return 'activity Added';
     } catch (e) {
@@ -32,29 +34,56 @@ class ActivityDb {
     }
   }
 
+  /// add Slot activity
 
+  Future<String> addSlot({
+    String? movieName,
+    String? dueDate,
+    double? interest,
+    int? slotPrice,
 
-  ///update
-  Future<String> update({String? id, String? title, String? story}) async {
+  }) async {
     try {
       String formattedDate = DateFormat.yMMMd().format(DateTime.now());
       final data = {
-        'title': title,
-        'story': story,
-        'time': formattedDate,
+        'movieName': movieName,
+        'slotPrice': slotPrice,
+        'dueDate': dueDate,
+        'interest': interest,
       };
 
-      activityCollection
-          .doc()
-          .collection('userActivities')
-          .doc(id)
-          .set(data, SetOptions(merge: true));
+      await activityCollection
+          .doc(user!.uid)
+          .collection('SlotActivities')
+          .add(data);
 
-      return 'Activity Updated';
+      return 'activity Added';
     } catch (e) {
       return e.toString();
     }
   }
+
+  // ///update
+  // Future<String> update({String? id, String? title, String? story}) async {
+  //   try {
+  //     String formattedDate = DateFormat.yMMMd().format(DateTime.now());
+  //     final data = {
+  //       'title': title,
+  //       'story': story,
+  //       'time': formattedDate,
+  //     };
+  //
+  //     activityCollection
+  //         .doc()
+  //         .collection('userActivities')
+  //         .doc(id)
+  //         .set(data, SetOptions(merge: true));
+  //
+  //     return 'Activity Updated';
+  //   } catch (e) {
+  //     return e.toString();
+  //   }
+  // }
 
   ///delete
   Future<String> delete({String? id, String? title, String? story}) async {

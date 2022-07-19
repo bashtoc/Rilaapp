@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:rila/models/bottomnavbar.dart';
 import 'package:rila/screens/signup_screen.dart';
 
-
 import '../adminpanel/adminhomepage.dart';
 
 class NavSelector extends StatefulWidget {

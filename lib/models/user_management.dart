@@ -1,34 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:rila/adminpanel/adminhomepage.dart';
-
-import 'bottomnavbar.dart';
 
 class DbHelper {
-
   CollectionReference dbCollection =
-  FirebaseFirestore.instance.collection('Users');
+      FirebaseFirestore.instance.collection('Users');
 
   User? user = FirebaseAuth.instance.currentUser;
 
-//Add personal details/ transaction details
-  Future<String> add({String? lastName, int? available, double? pending, String? firstName, String? address, required int pendingBalance}) async {
+  ///Add personal details/ transaction details
+  Future<String> addUser(
+      {String? lastName,
+      double? available,
+      String? firstName,
+      String? address,
+     }) async {
+    String? docId = dbCollection.doc(user!.uid).id;
     try {
       String formattedDate = DateFormat.yMMMd().format(DateTime.now());
       final data = {
         'lastName': lastName,
         'firstName': firstName,
-        'address': address,
+        // 'address': address,
         'time': formattedDate,
         'role': 'user',
-        'available': 00,
-        'pending' : 00.00,
+        // 'available': 00.00,
+        // 'id': docId,
       };
 
-      await dbCollection.doc(user!.uid).collection('MainUsers').add(data);
+      await dbCollection
+          .doc(user!.uid)
+          .collection('MainUsers')
+          .doc(docId)
+          .set(data);
 
       return 'user Added';
     } catch (e) {
@@ -36,20 +40,22 @@ class DbHelper {
     }
   }
 
-
-
-
-
-///update
-  Future<String> update( { pendingBalance}) async {
+  ///update
+  Future<String> update({
+    double? available,
+  }) async {
+    String? docId = dbCollection.doc(user!.uid).id;
     try {
-      String formatedDate = DateFormat.yMMMd().format(DateTime.now());
       final data = {
-        'pending' : pendingBalance,
-
+        'available': available,
       };
 
-      dbCollection.doc(user!.uid).collection('MainUsers').doc(user?.uid).update(data['pending']);
+      FirebaseFirestore.instance
+          .collection('Users')
+          .doc(user!.uid)
+          .collection('MainUsers')
+          .doc(docId)
+          .update(data);
 
       return 'user Updated';
     } catch (e) {
@@ -58,10 +64,10 @@ class DbHelper {
   }
 
   ///Logout
-  signOut(){
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  signOut() {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  _auth.signOut();
+    _auth.signOut();
   }
 
   ///delete
@@ -74,21 +80,4 @@ class DbHelper {
       return e.toString();
     }
   }
-}
-
-
-
-authorizeAccess(BuildContext context){
-   User? user = FirebaseAuth.instance.currentUser;
-    FirebaseFirestore.instance.collection('Users').doc(user?.uid).collection('MainUsers').get().then((docs) {
-
-        if(docs.docs[0].data()['role'] == 'admin'){
-         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const AdminPanel()), (route) => false) ;
-        } else{
-          print('its messed up');
-        }
-
-    }
-    );
-
 }

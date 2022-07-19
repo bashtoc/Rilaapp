@@ -9,20 +9,21 @@ class MovieDbHelper {
 
   Future<String> slots(
       {String? movieName,
+        String? movieBanner,
       int? slotPrice,
         String? dueDate,
         int? percentageInterest,
         String? streamingPlatform,
       }) async {
     try {
-      String formattedDate = DateFormat.yMMMd().format(DateTime.now());
+
       final data = {
         'movieName': movieName,
-        'date': formattedDate,
         'slotPrice': slotPrice,
         'dueDate' : dueDate,
         'percentageInterest' : percentageInterest,
         'streamingPlatform' : streamingPlatform,
+        'movieBanner' : movieBanner,
       };
 
       await dbCollection.add(data);
@@ -35,12 +36,17 @@ class MovieDbHelper {
 
   /// add ticket slots
 
-  Future<String> tick({
+  Future<String> tickets({
     int? ticketPrice,
+    String? ticketBanner,
+
   }) async {
     try {
+      String formattedDate = DateFormat.yMMMd().format(DateTime.now());
       final data = {
         'ticket price': ticketPrice,
+        'ticketBanner' : ticketBanner,
+        'date' :  formattedDate,
       };
 
       await FirebaseFirestore.instance.collection('tickets').add(data);
@@ -65,7 +71,7 @@ class MovieDbHelper {
           .doc()
           .collection('MainUsers')
           .doc(id)
-          .set(data, SetOptions(merge: true));
+          .update(data);
 
       return 'user Updated';
     } catch (e) {

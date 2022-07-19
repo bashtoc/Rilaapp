@@ -1,9 +1,13 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:rila/screens/paystackgateway.dart';
+import 'package:rila/screens/bought_tickets.dart';
+import 'package:rila/screens/buy_tickets_now.dart';
 
 import '../models/constants.dart';
- String? tickets;
+
+String tickets = 'tickets';
+
 class Tickets extends StatefulWidget {
   const Tickets({Key? key}) : super(key: key);
 
@@ -13,32 +17,60 @@ class Tickets extends StatefulWidget {
 
 class _TicketsState extends State<Tickets> {
   CollectionReference dbCollection =
-      FirebaseFirestore.instance.collection('tickets');
+  FirebaseFirestore.instance.collection('tickets');
   String moviesBanner = 'assets/moviesBanner.jpeg';
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios,
-            color: buttonColor,
+            color: Colors.black,
           ),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: const Text(
-          'Tickets',
-          style: TextStyle(
-            color: Colors.black,
-          ),
-        ),
         centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Text(
+              'Tickets',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18),
+            ),
+            const SizedBox(
+              width: 70,
+            ),
+            SizedBox(
+              height: 30,
+              width: 85,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    primary: buttonColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const BoughtTickets()));
+                  },
+                  child: const Text('Bought')),
+            )
+          ],
+        ),
       ),
       backgroundColor: Colors.white,
       body: StreamBuilder<QuerySnapshot>(
@@ -67,7 +99,7 @@ class _TicketsState extends State<Tickets> {
                     children: [
                       ...snapshot.data!.docs.map((data) {
                         int ticketPrice = data.get('ticket price');
-
+                        String ticketBanner = data.get('ticketBanner');
                         return Column(
                           children: [
                             const SizedBox(
@@ -75,86 +107,171 @@ class _TicketsState extends State<Tickets> {
                             ),
                             Container(
                               width: 360,
-                              decoration: const BoxDecoration(
+                              decoration: BoxDecoration(
                                 color: Colors.white,
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.grey,
-                                    blurRadius: 7.0,
-                                    spreadRadius: 1.0,
-                                    offset: Offset(0.0,
-                                        1.0), // shadow direction: bottom right
+                                    color: Colors.grey.withOpacity(0.3),
+                                    blurRadius: 70.0,
+                                    spreadRadius: 0.0,
+                                    offset: const Offset(0.0,
+                                        10.0), // shadow direction: bottom right
                                   )
                                 ],
                               ),
-
-                              // decoration: BoxDecoration(
-                              //
-                              //   borderRadius: BorderRadius.only(topLeft: Radius.circular(10)) ,
-                              // ),
                               child: Column(
                                 children: [
-                                  Image.asset(moviesBanner),
+                                  CachedNetworkImage(
+                                    height: 118,
+                                    width: 356,
+                                    imageUrl: ticketBanner,
+                                    placeholder: (context, url) =>
+                                    const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: Center(
+                                            child:
+                                            CircularProgressIndicator(
+                                              color: buttonColor,
+                                            ))),
+                                    errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                                  ),
+                                  // Image.network(ticketBanner,height: 118, width: 356,) ,
                                   Row(
                                     children: [
                                       //
                                       // const SizedBox(width: 10,),
                                       Container(
-                                        width: 150,
+                                        width: 90,
                                         height: 70,
                                         margin: const EdgeInsets.only(
-                                            left: 40, top: 10),
+                                            left: 10, top: 10),
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             const Text(
-                                              'Ticket Price',
+                                              'Regular',
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 18,
+                                                fontSize: 14,
                                               ),
                                             ),
                                             const SizedBox(
                                               height: 20,
                                             ),
                                             Text(
-                                              'NGN $ticketPrice',
+                                              '$ticketPrice',
                                               style: const TextStyle(
-                                                fontSize: 14,
+                                                fontSize: 12,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             )
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(
-                                        width: 10,
+                                      Container(
+                                        width: 70,
+                                        height: 70,
+                                        margin: const EdgeInsets.only(top: 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              'VIP',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            Text(
+                                              '$ticketPrice',
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            )
+                                          ],
+                                        ),
                                       ),
                                       Container(
-                                        width: 120,
-                                        alignment: Alignment.center,
-                                        child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                            elevation: 0,
-                                            primary: buttonColor,
-                                          ),
-                                          onPressed: () {
-                                            MakePayment(
-                                              ctx: context,
-                                              price: ticketPrice, id: tickets ,
-                                            ).chargeCardAndMakePayment();
-                                            // something happens when pressed *//
-                                          },
-                                          child: const Text(
-                                            'Buy Ticket',
-                                            style: TextStyle(
+                                        width: 80,
+                                        height: 70,
+                                        margin: const EdgeInsets.only(
+                                            left: 10, top: 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              'VVIP',
+                                              style: TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.white),
-                                          ),
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            Text(
+                                              '$ticketPrice',
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 80,
+                                        height: 70,
+                                        margin: const EdgeInsets.only(
+                                            left: 10, top: 10),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                              'Tables',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            Text(
+                                              '$ticketPrice',
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(
+                                          builder: (
+                                              context) => const BuyTicketsNow()));
+                                    },
+                                    child: const Text('Buy now'),
+                                    style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(25),
+                                        ),
+                                        primary: const Color(0xffC55E14)),
                                   )
                                 ],
                               ),
@@ -162,6 +279,7 @@ class _TicketsState extends State<Tickets> {
                             const SizedBox(
                               height: 20,
                             ),
+
                             //another hard coded list
                           ],
                         );

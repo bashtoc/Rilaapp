@@ -1,50 +1,67 @@
-
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paystack/flutter_paystack.dart';
+import 'package:flutterwave_standard/core/flutterwave.dart';
+import 'package:flutterwave_standard/flutterwave.dart';
+import 'package:flutterwave_standard/models/requests/customer.dart';
+import 'package:flutterwave_standard/models/requests/customizations.dart';
+import 'package:flutterwave_standard/models/responses/charge_response.dart';
+import 'package:flutterwave_standard/view/flutterwave_style.dart';
 import 'package:rila/adminpanel/activity_database.dart';
 import 'package:rila/classes/paystackkey.dart';
-import 'package:rila/models/user_management.dart';
-import 'package:rila/screens/activities.dart';
-import 'package:rila/screens/profile.dart';
+import 'package:rila/models/bottomnavbar.dart';
 import 'package:rila/screens/slot_details.dart';
 import 'package:rila/screens/tickets.dart';
 
-import '../adminpanel/adminhomepage.dart';
-import '../models/bottomnavbar.dart';
-import 'dashboard.dart';
+import '../adminpanel/activity_database.dart';
+
 const snackBar1 = SnackBar(content: Text('transaction successful'));
 const snackBar2 = SnackBar(content: Text('transaction failed'));
-
 
 class MakePayment {
   MakePayment({
     required this.ctx,
     required this.price,
-    required this.id,
-
+    this.id,
+    this.interest,
+    this.dueDate,
+    this.movieName,
+    this.date,
+    this.ticketPrice,
   });
 
-   successResult(BuildContext context){
-
-      if(id == SlotDetail){
-        ActivityDb().addActivity(slotPrice: price, );
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const Activities()));
-        DbHelper().update(pendingBalance:price);
-      } else{
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const DashBoard()), (route) => false);
-        print('no way man');
+  successResult(BuildContext context) {
+    if (id == slotDetails) {
+      ActivityDb().addSlot(
+        slotPrice: price,
+        dueDate: dueDate,
+        interest: interest,
+        movieName: movieName,
+      );
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => BottomNavBar()));
+    } else {
+      if (id == tickets) {
+        ActivityDb().addTickets(
+          ticketPrice: price,
+        );
       }
-
     }
+  }
 
-
+  // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const DashBoard()), (route) => false);
+  // print('no way man');
 
   BuildContext ctx;
   int price;
   String? id;
+  double? interest;
+  String? dueDate;
+  String? movieName;
+  String? date;
+  int? ticketPrice;
 
   PaystackPlugin payStack = PaystackPlugin();
   //reference
@@ -57,7 +74,6 @@ class MakePayment {
     }
 
     return 'ChargedFrom${platform}_${DateTime.now().millisecondsSinceEpoch}';
-
   }
 
   //Get ui
@@ -81,7 +97,7 @@ class MakePayment {
 
       CheckoutResponse response = await payStack.checkout(ctx,
           charge: charge,
-          method: CheckoutMethod.card,
+          method: CheckoutMethod.bank,
           fullscreen: true,
           logo: Image.asset(
             'assets/rila logo.png',
@@ -89,19 +105,56 @@ class MakePayment {
             width: 30,
           ));
       if (response.status == true) {
-       successResult(ctx);
+        successResult(ctx);
 
         // ScaffoldMessenger.of(ctx).showSnackBar(snackBar1);
-       // print('transaction was successful');
+        // print('transaction was successful');
       } else {
         return const SnackBar(content: Text('transaction failed'));
         // print('Transaction Failed',);
       }
-
     });
   }
-
 }
 
+makePayment(context) async {
+  final style = FlutterwaveStyle(
+      buttonColor: Colors.white,
+      appBarIcon: const Icon(Icons.arrow_back_ios, color: Colors.black54),
+      buttonTextStyle: const TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+        fontSize: 18,
+      ),
+      appBarColor: Colors.white,
+      dialogCancelTextStyle: const TextStyle(
+        color: Colors.redAccent,
+        fontSize: 18,
+      ),
+      dialogContinueTextStyle: const TextStyle(
+        color: Colors.blue,
+        fontSize: 18,
+      ));
+  final Customer customer =
+      Customer(name: "", phoneNumber: "", email: "customer@customer.com");
 
+  final Flutterwave flutterwave = Flutterwave(
+      context: context,
+      style: style,
+      publicKey: "FLWPUBK_TEST-e8d4cd5462fb381c4163ba7f7f746a98-X",
+      currency: "NGN",
+      txRef: "unique_transaction_reference",
+      amount: "3000",
+      customer: customer,
+      paymentOptions: "ussd, card, barter, payattitude",
+      customization: Customization(title: "Test Payment"),
+      isTestMode: false);
 
+  final ChargeResponse response = await flutterwave.charge();
+
+  if (response.status == 'success') {
+    'reb';
+  } else {
+    "  Transaction not successful";
+  }
+}

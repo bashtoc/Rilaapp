@@ -1,18 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:rila/screens/paystackgateway.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+
+import '../models/bottomnavbar.dart';
 
 const snackBar2 = SnackBar(content: Text('insufficient funds'));
 
 class WithDrawAmount extends StatefulWidget {
   const WithDrawAmount(
-      {Key? key, required this.lastName, required this.availableBalance, required this.firstName})
+      {Key? key,
+      required this.lastName,
+      required this.availableBalance,
+      required this.firstName})
       : super(key: key);
   final String firstName;
-  final int availableBalance;
+  final double availableBalance;
   final String lastName;
   @override
   State<WithDrawAmount> createState() => _WithDrawAmountState();
 }
+
+String currency(context) {
+  var format = NumberFormat().simpleCurrencySymbol('NGN');
+  return format;
+}
+
+String formNum(String s) {
+  return NumberFormat.decimalPattern().format(
+    int.parse(s),
+  );
+}
+
+TextEditingController currencyController = TextEditingController();
 
 class _WithDrawAmountState extends State<WithDrawAmount> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -34,156 +53,203 @@ class _WithDrawAmountState extends State<WithDrawAmount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.black,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          centerTitle: true,
+          elevation: 0,
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Withdraw amount',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
-        centerTitle: true,
-        elevation: 0,
         backgroundColor: Colors.white,
-        title: const Text(
-          'Withdraw amount',
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Container(
-          margin: const EdgeInsets.only(left: 50, right: 50, top: 40),
-          width: 400,
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'balance: ',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey),
-                  ),
-                  const Text(
-                    ' NGN',
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey),
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    widget.availableBalance.toString(),
-                    style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 50),
-              Form(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        withDrawAmount = int.parse(value);
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Enter amount',
-                      ),
-                      validator: validatePass,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        accountNo = int.parse(value);
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Account Number',
-                      ),
-                      validator: validatePass,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      textAlign: TextAlign.center,
+        body: SingleChildScrollView(
+            child: Container(
+                margin: const EdgeInsets.only(left: 20, right: 20, top: 40),
 
-                      onChanged: (value) {
-                        bankName = value;
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Bank Name',
+                child: Column(children: [
+
+                  Form(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    key: _formKey,
+                    child: Column(children: [
+                      Column(
+                        children: [
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(
+                                    'Enter amount',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.black.withOpacity(0.6)),
+                                  ), const SizedBox(width: 70),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text(
+                                        'balance: ',
+                                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                                      ),
+
+                                      Text(
+                                        '${currency(context)} ${widget.availableBalance.toString()}',
+                                        style:
+                                        const TextStyle(fontSize: 16, color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  // border: const Border(),
+                                ),
+                                child: TextFormField(
+
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.black.withOpacity(0.7)),
+                                  controller: currencyController,
+                                  decoration: InputDecoration(
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(32.0),
+                                        borderSide: const BorderSide(
+                                          color: Colors.grey,
+                                        )),
+                                    contentPadding:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 25.0, horizontal: 10.0),
+                                    prefix: Text('    ${currency(context)} '),
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  onChanged: (string) {
+                                    string = formNum(
+                                      string.replaceAll(
+                                        ',',
+                                        '',
+                                      ),
+                                    );
+                                    currencyController.value =
+                                        TextEditingValue(
+                                      text: string,
+                                      selection: TextSelection.collapsed(
+                                        offset: string.length,
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                        ],
                       ),
-                      validator: validatePass,
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-               Row(
-                 mainAxisAlignment: MainAxisAlignment.center,
-                 children: [
-                   Text(widget.firstName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize:18), ),
-                   const SizedBox(width: 10,),
-                   Text(widget.lastName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize:18),),
-                 ],
-               ),
-              const SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.blue,
-                ),
-                onPressed: () {
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: const Color(0xffC55E14),
+                        ),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            try {
+                              if (withDrawAmount < widget.availableBalance ||
+                                  widget.availableBalance > 499) {
+                                Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const WithdrawNotifi()),
+                                    (route) => false);
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar2);
+                              }
 
-                  if (_formKey.currentState!.validate()) {
-                    try {
-                      if (withDrawAmount <= widget.availableBalance) {
-                        print('sucess');
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar2);
-                        ;
-                      }
+                              // something happens when its pressed
+                            } catch (e) {
+                              print(e);
+                            }
+                          }
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 70,
+                          color: const Color(0xffC55E14),
+                          child: TextButton(
+                              onPressed: () {},
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: const [
+                                    Text(
+                                      'withdraw ',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ])),
+                        ),
+                      ),
+                    ]),
+                  )
+                ]))));
+  }
+}
 
-                      // something happens when its pressed
-                    } catch (e) {
-                      print(e);
-                    }
-                  }
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  height: 45,
-                  width: 110,
-                  child: const Text(
-                    'continue',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+class WithdrawNotifi extends StatelessWidget {
+  const WithdrawNotifi({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    ///
+    Future.delayed(const Duration(seconds: 8), () {
+      Navigator.pushAndRemoveUntil(context,
+          MaterialPageRoute(builder: (_) => BottomNavBar()), (route) => false);
+    });
+
+    //
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/Vector.svg',
+              height: 100,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text(
+              'Withdraw request  successful',
+              style: TextStyle(color: Color(0xff0A720E)),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Text('your cash will be in your bank soon'),
+          ],
         ),
       ),
     );

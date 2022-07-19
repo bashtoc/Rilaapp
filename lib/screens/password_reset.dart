@@ -1,10 +1,9 @@
+import 'package:blurry_modal_progress_hud/blurry_modal_progress_hud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:blurry_modal_progress_hud/blurry_modal_progress_hud.dart';
 import 'package:rila/models/bottomnavbar.dart';
-import 'package:rila/screens/profile.dart';
 
 import '../models/constants.dart';
 
